@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "319025317847",
+    "firebase_url": "https://mobayari-app-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "mobayari-app",
+    "storage_bucket": "mobayari-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:319025317847:android:c98ba6e52a11297e916d92",
+        "android_client_info": {
+          "package_name": "com.example.mobayari_app_dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "319025317847-4r0chqp0e8gjijfo5iso7q4kv0smngr7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAA_C5Xl4PvlPhpuP6XKsFiHQMBPAVgB6o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "319025317847-4r0chqp0e8gjijfo5iso7q4kv0smngr7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
