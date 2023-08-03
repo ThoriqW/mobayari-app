@@ -2,7 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:mobayari_app_dev/views/main.view.dart';
 
-import '../model/user.dart';
+import '../model/createMasyarakat.dart';
 import '../utils/global.colors.dart';
 
 class CreateUserView extends StatefulWidget {

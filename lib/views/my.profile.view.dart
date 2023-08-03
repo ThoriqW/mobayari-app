@@ -7,7 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../model/profile.dart';
+import '../model/adminProfile.dart';
 
 import '../utils/global.colors.dart';
 import 'main.view.dart';
@@ -35,7 +35,7 @@ class _MyProfileViewState extends State<MyProfileView> {
 
   String imageUrl = "";
 
-  late Map<dynamic, dynamic>? dataUser = {};
+  late Map<dynamic, dynamic>? dataAdmin = {};
 
   User? getCurrentUser() {
     User? user = FirebaseAuth.instance.currentUser;
@@ -54,14 +54,14 @@ class _MyProfileViewState extends State<MyProfileView> {
     final snapshot =
         await FirebaseDatabase.instance.ref().child("Admins/$uid").get();
     if (snapshot.exists) {
-      dataUser = snapshot.value as Map<dynamic, dynamic>?;
-      if (dataUser != null) {
-        _nameController.text = dataUser?['nama'];
-        _addressController.text = dataUser?['alamat'];
-        _phoneNumberController.text = dataUser?['nomorHp'];
+      dataAdmin = snapshot.value as Map<dynamic, dynamic>?;
+      if (dataAdmin != null) {
+        _nameController.text = dataAdmin?['nama'];
+        _addressController.text = dataAdmin?['alamat'];
+        _phoneNumberController.text = dataAdmin?['nomorHp'];
         setState(() {
-          name = dataUser?['nama'];
-          imageUrl = dataUser?['image'];
+          name = dataAdmin?['nama'];
+          imageUrl = dataAdmin?['image'];
         });
       }
     }
@@ -334,7 +334,7 @@ class _MyProfileViewState extends State<MyProfileView> {
                           email: _emailController.text,
                           nomorHp: _phoneNumberController.text,
                           image: imageUrl);
-                      if (dataUser != null) {
+                      if (dataAdmin != null) {
                         updateData(profile, "$uid");
                       } else {
                         insertData(profile, '$uid');

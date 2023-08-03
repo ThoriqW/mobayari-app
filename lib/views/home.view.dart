@@ -1,6 +1,6 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:mobayari_app_dev/model/User.dart';
+import 'package:mobayari_app_dev/model/masyarakat.dart';
 import 'package:mobayari_app_dev/utils/global.colors.dart';
 import 'package:mobayari_app_dev/views/user.profile.view.dart';
 import 'package:mobayari_app_dev/views/widgets/filter.modal.global.dart';
@@ -14,8 +14,8 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  List<User> dataUser = [];
-  List<User> userDisplay = [];
+  List<Masyarakat> dataUser = [];
+  List<Masyarakat> userDisplay = [];
   List<String> selectedCategories = [];
 
   bool isLoading = false;
@@ -37,14 +37,15 @@ class _HomeViewState extends State<HomeView> {
     if (snapshot.exists) {
       Map<dynamic, dynamic> dataMap = snapshot.value as Map<dynamic, dynamic>;
       dataMap.forEach((key, value) {
-        User data = User(
+        Masyarakat data = Masyarakat(
+            idUser: key,
             name: value['name'],
             alamat: value['alamat'],
             kecamatan: value['kecamatan'],
             nomorHp: value['nomorHp']);
         dataUser.add(data);
+        print(key);
       });
-
       setState(() {
         userDisplay = dataUser;
         isLoading = false;

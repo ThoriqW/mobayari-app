@@ -1,12 +1,14 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:mobayari_app_dev/model/masyarakat.dart';
 import 'package:mobayari_app_dev/views/payment.receipt.view.dart';
 import '../model/payment.dart';
 import '../utils/global.colors.dart';
 
 class PaymentView extends StatefulWidget {
   const PaymentView({super.key, required this.data});
-  final String data;
+  final Masyarakat data;
   @override
   State<PaymentView> createState() => _PaymentViewState();
 }
@@ -23,6 +25,8 @@ class _PaymentViewState extends State<PaymentView> {
   String currentTime = "";
   String total = "";
 
+  late DatabaseReference dbRef;
+
   @override
   void initState() {
     super.initState();
@@ -32,6 +36,7 @@ class _PaymentViewState extends State<PaymentView> {
     harga = lishHarga[0];
     _bulanController.text = initialBulan.toString();
     totalHarga(harga, initialBulan);
+    dbRef = FirebaseDatabase.instance.ref().child("Pembayaran");
   }
 
   void _tambahBulan() {
@@ -235,7 +240,7 @@ class _PaymentViewState extends State<PaymentView> {
             Padding(
               padding: const EdgeInsets.only(top: 10),
               child: Text(
-                widget.data,
+                widget.data.name,
                 style: TextStyle(color: GlobalColors.textColor, fontSize: 16),
               ),
             ),
@@ -249,22 +254,45 @@ class _PaymentViewState extends State<PaymentView> {
                   backgroundColor: GlobalColors.mainColor,
                   elevation: 0,
                 ),
-                onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => PaymentReceiptView(
-                        data: Payment(
-                          name: widget.data,
-                          tanggalTransakasi:
-                              "${DateFormat('yyyy-MM-dd').format(newDate)}\n$currentTime WITA",
-                          harga: harga,
-                          bulan: initialBulan.toString(),
-                          total: total,
+                onPressed: () async {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                              GlobalColors.mainColor),
+                        ), // Show CircularProgressIndicator during delay.
+                      );
+                    },
+                  );
+                  Payment payment = Payment(
+                    idUser: widget.data.idUser,
+                    name: widget.data.name,
+                    tanggalTransakasi:
+                        "${DateFormat('yyyy-MM-dd').format(newDate)}\n$currentTime WITA",
+                    harga: harga,
+                    bulan: initialBulan.toString(),
+                    total: total,
+                  );
+                  Future.delayed(const Duration(seconds: 2), () {
+                    return makePayment(
+                        payment); // This returns a Future, no need to await it here.
+                  }).then((_) {
+                    if (Navigator.canPop(context)) {
+                      Navigator.pop(
+                          context); // Close the CircularProgressIndicator dialog.
+                    }
+                    if (!mounted) return;
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PaymentReceiptView(
+                          data: payment,
                         ),
                       ),
-                    ),
-                  );
+                    );
+                  });
                 },
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(24.0, 12.0, 24.0, 12.0),
@@ -283,5 +311,13 @@ class _PaymentViewState extends State<PaymentView> {
         ),
       ),
     );
+  }
+
+  void makePayment(Payment payment) {
+    if (harga.isNotEmpty && initialBulan.toString().isNotEmpty) {
+      dbRef.push().set(payment.toJson());
+    } else {
+      print("Field must be not empty");
+    }
   }
 }

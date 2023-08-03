@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:mobayari_app_dev/model/User.dart';
 import 'package:mobayari_app_dev/views/payment.view.dart';
+import '../model/masyarakat.dart';
 import '../utils/global.colors.dart';
 
 class UserProfileView extends StatefulWidget {
   const UserProfileView({super.key, required this.data});
 
-  final User data;
+  final Masyarakat data;
 
   @override
   State<UserProfileView> createState() => _UserProfileViewState();
@@ -160,7 +160,7 @@ class _UserProfileViewState extends State<UserProfileView> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => PaymentView(data: widget.data.name)));
+                        builder: (context) => PaymentView(data: widget.data)));
               },
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(24.0, 12.0, 24.0, 12.0),
