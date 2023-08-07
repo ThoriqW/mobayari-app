@@ -139,12 +139,14 @@ class _MyProfileViewState extends State<MyProfileView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.only(top: 50.0),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 50.0),
                     child: Text(
                       "Profile Petugas",
-                      style:
-                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: GlobalColors.mainColor),
                     ),
                   ),
                   const SizedBox(
@@ -246,6 +248,7 @@ class _MyProfileViewState extends State<MyProfileView> {
                             BorderSide(color: GlobalColors.mainColor, width: 2),
                       ),
                     ),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(
                     height: 10,
@@ -270,6 +273,7 @@ class _MyProfileViewState extends State<MyProfileView> {
                             BorderSide(color: GlobalColors.mainColor, width: 2),
                       ),
                     ),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(
                     height: 10,
@@ -294,6 +298,7 @@ class _MyProfileViewState extends State<MyProfileView> {
                             BorderSide(color: GlobalColors.mainColor, width: 2),
                       ),
                     ),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(
                     height: 10,
@@ -318,6 +323,7 @@ class _MyProfileViewState extends State<MyProfileView> {
                             BorderSide(color: GlobalColors.mainColor, width: 2),
                       ),
                     ),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(
                     height: 20,
@@ -346,7 +352,9 @@ class _MyProfileViewState extends State<MyProfileView> {
                       child: Text(
                         "Simpan",
                         style: TextStyle(
-                            color: GlobalColors.whiteColor, fontSize: 16),
+                            color: GlobalColors.whiteColor,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
                   )

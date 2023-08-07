@@ -2,7 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:mobayari_app_dev/model/masyarakat.dart';
 import 'package:mobayari_app_dev/utils/global.colors.dart';
-import 'package:mobayari_app_dev/views/user.profile.view.dart';
+import 'package:mobayari_app_dev/views/profile.masyarakat.view.dart';
 import 'package:mobayari_app_dev/views/widgets/filter.modal.global.dart';
 
 class HomeView extends StatefulWidget {
@@ -48,6 +48,10 @@ class _HomeViewState extends State<HomeView> {
       });
       setState(() {
         userDisplay = dataUser;
+        isLoading = false;
+      });
+    } else {
+      setState(() {
         isLoading = false;
       });
     }
@@ -102,7 +106,7 @@ class _HomeViewState extends State<HomeView> {
                   Text(
                     "Masyarakat",
                     style: TextStyle(
-                        color: GlobalColors.textColor,
+                        color: GlobalColors.mainColor,
                         fontSize: 24,
                         fontWeight: FontWeight.bold),
                   ),
@@ -174,8 +178,9 @@ class _HomeViewState extends State<HomeView> {
                                 padding: const EdgeInsets.only(bottom: 8.0),
                                 child: Text(
                                   userDisplay[index].name,
-                                  style:
-                                      TextStyle(color: GlobalColors.textColor),
+                                  style: TextStyle(
+                                      color: GlobalColors.textColor,
+                                      fontWeight: FontWeight.bold),
                                 ),
                               ),
                               subtitle: Text(

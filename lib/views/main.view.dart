@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mobayari_app_dev/utils/global.colors.dart';
-import 'package:mobayari_app_dev/views/create.user.view.dart';
+import 'package:mobayari_app_dev/views/create.masyarakat.view.dart';
 import 'package:mobayari_app_dev/views/home.view.dart';
-import 'package:mobayari_app_dev/views/my.profile.view.dart';
+import 'package:mobayari_app_dev/views/profile.petugas.view.dart';
 
 class MainView extends StatefulWidget {
   const MainView({super.key});

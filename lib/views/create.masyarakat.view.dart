@@ -53,9 +53,12 @@ class _CreateUserViewState extends State<CreateUserView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 "Tambah Data Masyarakat",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: GlobalColors.mainColor),
               ),
               const SizedBox(
                 height: 20,
@@ -185,8 +188,10 @@ class _CreateUserViewState extends State<CreateUserView> {
                   padding: const EdgeInsets.fromLTRB(24.0, 12.0, 24.0, 12.0),
                   child: Text(
                     "Simpan",
-                    style:
-                        TextStyle(color: GlobalColors.whiteColor, fontSize: 16),
+                    style: TextStyle(
+                        color: GlobalColors.whiteColor,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
                   ),
                 ),
               ),

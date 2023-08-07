@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobayari_app_dev/model/payment.dart';
 import '../utils/global.colors.dart';
+import 'print.receipt.view.dart';
 
 class PaymentReceiptView extends StatefulWidget {
   const PaymentReceiptView({super.key, required this.data});
@@ -34,19 +35,27 @@ class _PaymentReceiptViewState extends State<PaymentReceiptView> {
               ),
             ),
           ),
-          child: const Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                Icons.print,
-                size: 32,
-              ),
-              SizedBox(height: 5),
-              Text(
-                'Cetak',
-                style: TextStyle(fontSize: 16),
-              ),
-            ],
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const PrintReceiptView()));
+            },
+            child: const Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.print,
+                  size: 32,
+                ),
+                SizedBox(height: 5),
+                Text(
+                  'Cetak',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ],
+            ),
           ),
         ),
       ),
