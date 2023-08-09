@@ -112,8 +112,6 @@ class _HistoryPaymentState extends State<HistoryPayment> {
                             Payment payment = historyPaymentDisplay[index];
                             return InkWell(
                               onTap: () {
-                                // Handle the onTap event for the specific item
-                                // You can perform any desired action here
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(

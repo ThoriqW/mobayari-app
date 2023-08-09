@@ -40,7 +40,7 @@ class _PaymentReceiptViewState extends State<PaymentReceiptView> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const PrintReceiptView()));
+                      builder: (context) => PrintReceiptView(data: widget.data,)));
             },
             child: const Column(
               mainAxisSize: MainAxisSize.min,
