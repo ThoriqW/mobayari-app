@@ -1,23 +1,26 @@
-class Profile {
+class Petugas {
   late String nama;
-  late String email;
   late String alamat;
-  late String nomorHp;
+  late String kelurahan;
+  late String email;
+  late String noHP;
   late String image;
 
-  Profile(
+  Petugas(
       {required this.nama,
-      required this.email,
       required this.alamat,
-      required this.nomorHp,
+      required this.kelurahan,
+      required this.email,
+      required this.noHP,
       required this.image});
 
   Map<String, dynamic> toJson() {
     return {
       'nama': nama,
-      'email': email,
       'alamat': alamat,
-      'nomorHp': nomorHp,
+      'kelurahan': kelurahan,
+      'email': email,
+      'noHP': noHP,
       'image': image
     };
   }

@@ -1,25 +1,43 @@
 class Masyarakat {
-  late String idUser;
-  late String name;
+  String? id;
+  late String nama;
+  late String noKK;
+  late String pekerjaan;
   late String alamat;
-  late String kecamatan;
-  late String nomorHp;
+  late String rt;
+  late String rw;
+  late String idPelanggan;
+  late String kelurahan;
+  late String noHP;
+  String? keterangan;
 
   Masyarakat({
-    required this.idUser,
-    required this.name,
+    this.id,
+    required this.nama,
+    required this.noKK,
+    required this.pekerjaan,
     required this.alamat,
-    required this.kecamatan,
-    required this.nomorHp,
+    required this.rt,
+    required this.rw,
+    required this.idPelanggan,
+    required this.kelurahan,
+    required this.noHP,
+    this.keterangan
   });
 
   Map<String, dynamic> toJson() {
     return {
-      'idUser': idUser,
-      'name': name,
+      'id': id,
+      'nama': nama,
+      'noKK': noKK,
+      'pekerjaan': pekerjaan,
       'alamat': alamat,
-      'kecamatan': kecamatan,
-      'nomorHp': nomorHp,
+      'rt': rt,
+      'rw': rw,
+      'idPelanggan': idPelanggan,
+      'kelurahan': kelurahan,
+      'noHP': noHP,
+      'keterangan': keterangan
     };
   }
 }

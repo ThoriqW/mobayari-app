@@ -23,7 +23,7 @@ class _PrintReceiptViewState extends State<PrintReceiptView> {
 
   bool _connected = false;
   BluetoothDevice? _device;
-  String tips = 'Tidak ada printer yang terhubung';
+  String tips = '';
 
   @override
   void initState() {
@@ -210,7 +210,7 @@ class _PrintReceiptViewState extends State<PrintReceiptView> {
                                 linefeed: 1));
                             list.add(LineText(
                                 type: LineText.TYPE_TEXT,
-                                content: widget.data.name,
+                                content: widget.data.nama,
                                 weight: 1,
                                 align: LineText.ALIGN_CENTER,
                                 fontZoom: 2,

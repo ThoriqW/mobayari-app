@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mobayari_app_dev/model/masyarakat.dart';
 import 'package:mobayari_app_dev/views/payment.receipt.view.dart';
+import 'package:mobayari_app_dev/views/widgets/checkbox.bulan.global.dart';
 import '../model/payment.dart';
 import '../utils/global.colors.dart';
 
@@ -14,9 +15,40 @@ class PaymentView extends StatefulWidget {
 }
 
 class _PaymentViewState extends State<PaymentView> {
-  List<String> lishHarga = ['Rp 45.000', 'Rp 60.000'];
-  int initialBulan = 1;
-  final TextEditingController _bulanController = TextEditingController();
+  Map<String, int> listJenisKegiatan = {
+    'Pilih Kegiatan': 0,
+    'Rumah Tinggal TR4 Kelas IV Darurat': 10000,
+    'kegiatan2': 20000,
+    'kegiatan3': 30000,
+  };
+  String selectedKegiatan = 'Pilih Kegiatan';
+
+  List<bool?> checkedStates = [];
+
+  List<String> bulan = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'Mei',
+    'Jun',
+    'Jul',
+    'Ags',
+    'Sep',
+    'Okt',
+    'Nov',
+    'Des'
+  ];
+  List<String> selectedBulan = [];
+
+  void updateSelectedBulan(String bulanItem, bool isChecked) {
+    if (isChecked) {
+      selectedBulan.add(bulanItem);
+    } else {
+      selectedBulan.remove(bulanItem);
+    }
+  }
+
   var formatCurrency =
       NumberFormat.currency(locale: 'id', symbol: 'Rp ', decimalDigits: 0);
 
@@ -24,8 +56,9 @@ class _PaymentViewState extends State<PaymentView> {
   String harga = "";
   String currentTime = "";
   String total = "";
+  String? errorText;
 
-  late DatabaseReference dbRef;
+  DatabaseReference dbRef = FirebaseDatabase.instance.ref().child("Pembayaran");
 
   @override
   void initState() {
@@ -33,28 +66,9 @@ class _PaymentViewState extends State<PaymentView> {
     DateTime date = DateTime.now();
     newDate = DateTime(date.year, date.month - 1, date.day);
     currentTime = DateFormat('hh:mm:ss').format(date);
-    harga = lishHarga[0];
-    _bulanController.text = initialBulan.toString();
-    totalHarga(harga, initialBulan);
-    dbRef = FirebaseDatabase.instance.ref().child("Pembayaran");
-  }
-
-  void _tambahBulan() {
-    setState(() {
-      initialBulan++;
-      _bulanController.text = initialBulan.toString();
-    });
-    totalHarga(harga, initialBulan);
-  }
-
-  void _kurangBulan() {
-    if (initialBulan > 1) {
-      setState(() {
-        initialBulan--;
-        _bulanController.text = initialBulan.toString();
-      });
-    }
-    totalHarga(harga, initialBulan);
+    harga = "${listJenisKegiatan[selectedKegiatan]}";
+    selectedBulan.add(bulan[date.month - 1]);
+    totalHarga(harga, selectedBulan.length);
   }
 
   void totalHarga(harga, bulan) {
@@ -104,117 +118,130 @@ class _PaymentViewState extends State<PaymentView> {
             const SizedBox(
               height: 25,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  flex: 6,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 5),
-                        child: Text(
-                          "Harga",
-                          style: TextStyle(
-                              color: GlobalColors.textColor,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Form(
-                        child: DropdownButtonFormField<String>(
-                          decoration: InputDecoration(
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: GlobalColors.stroke, width: 2),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: GlobalColors.stroke, width: 2),
-                            ),
-                          ),
-                          isDense: true,
-                          value: harga,
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              harga = newValue!;
-                              initialBulan = 1;
-                              totalHarga(harga, initialBulan);
-                            });
-                          },
-                          items: lishHarga.map((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    ],
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 5),
+                  child: Text(
+                    "Jenis Kegiatan",
+                    style: TextStyle(
+                        color: GlobalColors.textColor,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
                   ),
                 ),
-                Expanded(
-                  flex: 4,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 5.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 5),
-                          child: Text(
-                            "Bulan",
-                            style: TextStyle(
-                                color: GlobalColors.textColor,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        TextFormField(
-                          controller: _bulanController,
-                          keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: GlobalColors.stroke, width: 2),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: GlobalColors.stroke, width: 2),
-                            ),
-                            suffixIcon: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                IconButton(
-                                  onPressed: _kurangBulan,
-                                  icon: const Icon(Icons.remove),
-                                ),
-                                Expanded(
-                                  child: Center(
-                                    child: Text(
-                                      initialBulan.toString(),
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                ),
-                                IconButton(
-                                  onPressed: _tambahBulan,
-                                  icon: const Icon(Icons.add),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
+                Form(
+                  child: DropdownButtonFormField<String>(
+                    decoration: InputDecoration(
+                      enabledBorder: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: GlobalColors.stroke, width: 2),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: GlobalColors.stroke, width: 2),
+                      ),
                     ),
+                    isDense: true,
+                    value: selectedKegiatan,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        selectedKegiatan = newValue!;
+                        harga = "${listJenisKegiatan[selectedKegiatan]}";
+                        totalHarga(harga, selectedBulan.length);
+                      });
+                    },
+                    items: listJenisKegiatan.keys.map((kegiatan) {
+                      return DropdownMenuItem<String>(
+                        value: kegiatan,
+                        child: Text(
+                          kegiatan,
+                          style: TextStyle(
+                            color: listJenisKegiatan.keys.first == kegiatan
+                                ? GlobalColors
+                                    .subText // Ganti warna untuk item pertama
+                                : null,
+                          ),
+                        ),
+                      );
+                    }).toList(),
                   ),
-                )
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 5),
+                  child: Text(
+                    "Pilih Bulan",
+                    style: TextStyle(
+                        color: GlobalColors.textColor,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+                GridView.count(
+                  crossAxisCount: 6, // Jumlah kolom
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  children: bulan.sublist(0, 6).map((bulanItem) {
+                    DateTime now = DateTime.now();
+                    int currentMonthIndex = now.month - 1;
+                    bool isChecked = false;
+                    if (bulan.indexOf(bulanItem) == currentMonthIndex) {
+                      isChecked = true;
+                    }
+                    return CheckboxBulanGlobal(
+                      isChecked: isChecked,
+                      bulanItem: bulanItem,
+                      onChanged: (isChecked) {
+                        setState(() {
+                          updateSelectedBulan(bulanItem, isChecked);
+                          totalHarga(harga, selectedBulan.length);
+                        });
+                      },
+                    );
+                  }).toList(),
+                ),
+                GridView.count(
+                  crossAxisCount: 6, // Jumlah kolom
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  children: bulan.sublist(6, 12).map((bulanItem) {
+                    DateTime now = DateTime.now();
+                    int currentMonthIndex = now.month - 1;
+                    bool isChecked = false;
+                    if (bulan.indexOf(bulanItem) == currentMonthIndex) {
+                      isChecked = true;
+                    }
+                    return CheckboxBulanGlobal(
+                      isChecked: isChecked,
+                      bulanItem: bulanItem,
+                      onChanged: (isChecked) {
+                        setState(() {
+                          updateSelectedBulan(bulanItem, isChecked);
+                          totalHarga(harga, selectedBulan.length);
+                        });
+                      },
+                    );
+                  }).toList(),
+                ),
               ],
             ),
             const SizedBox(
               height: 25,
+            ),
+            Text(
+              harga != ''
+                  ? formatCurrency.format(listJenisKegiatan[selectedKegiatan])
+                  : '0',
+              style: TextStyle(color: GlobalColors.textColor, fontSize: 16),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 10),
@@ -226,7 +253,7 @@ class _PaymentViewState extends State<PaymentView> {
             Padding(
               padding: const EdgeInsets.only(top: 10),
               child: Text(
-                DateFormat('yyyy-MM-dd').format(newDate),
+                DateFormat('dd-MM-yyyy').format(newDate),
                 style: TextStyle(color: GlobalColors.textColor, fontSize: 16),
               ),
             ),
@@ -240,12 +267,25 @@ class _PaymentViewState extends State<PaymentView> {
             Padding(
               padding: const EdgeInsets.only(top: 10),
               child: Text(
-                widget.data.name,
+                widget.data.nama,
                 style: TextStyle(color: GlobalColors.textColor, fontSize: 16),
               ),
             ),
             const SizedBox(
-              height: 50,
+              height: 25,
+            ),
+            if (errorText != null)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 5.0),
+                child: Text(
+                  errorText!,
+                  style: const TextStyle(
+                    color: Colors.red,
+                  ),
+                ),
+              ),
+            const SizedBox(
+              height: 25,
             ),
             SizedBox(
               width: double.infinity,
@@ -267,32 +307,49 @@ class _PaymentViewState extends State<PaymentView> {
                     },
                   );
                   Payment payment = Payment(
-                    idUser: widget.data.idUser,
-                    name: widget.data.name,
-                    tanggalTransakasi:
-                        "${DateFormat('yyyy-MM-dd').format(newDate)}\n$currentTime WITA",
+                    jenisKegiatan: selectedKegiatan,
                     harga: harga,
-                    bulan: initialBulan.toString(),
+                    bulan: selectedBulan.length.toString(),
+                    namaBulan: selectedBulan,
+                    idMasyarakat: widget.data.idPelanggan,
+                    nama: widget.data.nama,
+                    alamat: widget.data.alamat,
+                    kelurahan: widget.data.kelurahan,
+                    rt: widget.data.rt,
+                    rw: widget.data.rw,
+                    tanggalTransakasi:
+                        "${DateFormat('dd-MM-yyyy').format(newDate)}\n$currentTime WITA",
                     total: total,
                   );
-                  Future.delayed(const Duration(seconds: 2), () {
-                    return makePayment(
-                        payment); // This returns a Future, no need to await it here.
-                  }).then((_) {
+                  if (harga != "0" &&
+                      selectedBulan.length.toString().isNotEmpty) {
+                    Future.delayed(const Duration(seconds: 2), () {
+                      return makePayment(
+                          payment); // This returns a Future, no need to await it here.
+                    }).then((_) {
+                      if (Navigator.canPop(context)) {
+                        Navigator.pop(
+                            context); // Close the CircularProgressIndicator dialog.
+                      }
+                      if (!mounted) return;
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PaymentReceiptView(
+                            data: payment,
+                          ),
+                        ),
+                      );
+                    });
+                  } else {
                     if (Navigator.canPop(context)) {
                       Navigator.pop(
                           context); // Close the CircularProgressIndicator dialog.
                     }
-                    if (!mounted) return;
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PaymentReceiptView(
-                          data: payment,
-                        ),
-                      ),
-                    );
-                  });
+                    setState(() {
+                      errorText = "Format pembayaran salah";
+                    });
+                  }
                 },
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(24.0, 12.0, 24.0, 12.0),
@@ -314,10 +371,6 @@ class _PaymentViewState extends State<PaymentView> {
   }
 
   void makePayment(Payment payment) {
-    if (harga.isNotEmpty && initialBulan.toString().isNotEmpty) {
-      dbRef.push().set(payment.toJson());
-    } else {
-      print("Field must be not empty");
-    }
+    dbRef.push().set(payment.toJson());
   }
 }

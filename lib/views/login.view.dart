@@ -31,7 +31,7 @@ class _LoginViewState extends State<LoginView> {
     } on FirebaseAuthException catch (e) {
       if (e.message != null) {
         setState(() {
-          errorText = "Invalid username or password";
+          errorText = "Password atau email salah";
         });
       }
     }

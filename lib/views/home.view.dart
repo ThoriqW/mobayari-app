@@ -38,13 +38,18 @@ class _HomeViewState extends State<HomeView> {
       Map<dynamic, dynamic> dataMap = snapshot.value as Map<dynamic, dynamic>;
       dataMap.forEach((key, value) {
         Masyarakat data = Masyarakat(
-            idUser: key,
-            name: value['name'],
+            id: key,
+            nama: value['nama'],
+            noKK: value['noKK'],
+            pekerjaan: value['pekerjaan'],
             alamat: value['alamat'],
-            kecamatan: value['kecamatan'],
-            nomorHp: value['nomorHp']);
+            rt: value['rt'],
+            rw: value['rw'],
+            idPelanggan: value['idPelanggan'],
+            kelurahan: value['kelurahan'],
+            noHP: value['noHP'],
+            keterangan: value['keterangan']);
         dataUser.add(data);
-        print(key);
       });
       setState(() {
         userDisplay = dataUser;
@@ -61,7 +66,7 @@ class _HomeViewState extends State<HomeView> {
     setState(() {
       userDisplay = dataUser
           .where(
-              (user) => user.name.toLowerCase().contains(value.toLowerCase()))
+              (user) => user.nama.toLowerCase().contains(value.toLowerCase()))
           .toList();
     });
   }
@@ -72,7 +77,7 @@ class _HomeViewState extends State<HomeView> {
     } else {
       setState(() {
         userDisplay = dataUser
-            .where((user) => selectedCategories.contains(user.kecamatan))
+            .where((user) => selectedCategories.contains(user.kelurahan))
             .toList();
       });
     }
@@ -88,7 +93,7 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     final List<String> categories =
-        dataUser.map((user) => user.kecamatan.toString()).toSet().toList();
+        dataUser.map((user) => user.kelurahan.toString()).toSet().toList();
 
     return Scaffold(
       body: Container(
@@ -177,14 +182,14 @@ class _HomeViewState extends State<HomeView> {
                               title: Padding(
                                 padding: const EdgeInsets.only(bottom: 8.0),
                                 child: Text(
-                                  userDisplay[index].name,
+                                  userDisplay[index].nama,
                                   style: TextStyle(
                                       color: GlobalColors.textColor,
                                       fontWeight: FontWeight.bold),
                                 ),
                               ),
                               subtitle: Text(
-                                userDisplay[index].kecamatan,
+                                userDisplay[index].kelurahan,
                                 style: const TextStyle(fontSize: 12.0),
                               ),
                             ),

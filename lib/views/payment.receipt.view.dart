@@ -87,7 +87,7 @@ class _PaymentReceiptViewState extends State<PaymentReceiptView> {
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    widget.data.name,
+                    widget.data.nama,
                     style: const TextStyle(fontSize: 16),
                   ),
                 ],

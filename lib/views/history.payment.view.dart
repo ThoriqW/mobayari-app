@@ -30,20 +30,28 @@ class _HistoryPaymentState extends State<HistoryPayment> {
     setState(() {
       isLoading = true;
     });
-    String idUser = widget.data.idUser;
-    Query query = dbRef.orderByChild("idUser").equalTo(idUser);
+    String? idMasyarakat = widget.data.idPelanggan;
+    Query query = dbRef.orderByChild("idMasyarakat").equalTo(idMasyarakat);
     DatabaseEvent event = await query.once();
     DataSnapshot snapshot = event.snapshot;
     if (snapshot.value != null) {
       Map<dynamic, dynamic> historyPembayaran =
           snapshot.value as Map<dynamic, dynamic>;
       historyPembayaran.forEach((key, value) {
+        List<String> namaBulan =
+            (value['namaBulan'] as List<dynamic>).cast<String>();
         Payment payment = Payment(
-            idUser: value['idUser'],
-            name: value['name'],
-            tanggalTransakasi: value['tanggalTransakasi'],
+            jenisKegiatan: value['jenisKegiatan'],
             harga: value['harga'],
             bulan: value['bulan'],
+            namaBulan: namaBulan,
+            idMasyarakat: value['idMasyarakat'],
+            nama: value['nama'],
+            alamat: value['alamat'],
+            kelurahan: value['kelurahan'],
+            rt: value['rt'],
+            rw: value['rw'],
+            tanggalTransakasi: value['tanggalTransakasi'],
             total: value['total']);
         historyPayment.add(payment);
       });
@@ -77,7 +85,7 @@ class _HistoryPaymentState extends State<HistoryPayment> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Profile Masyarakat",
+                "Histori Pembayaran",
                 style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,

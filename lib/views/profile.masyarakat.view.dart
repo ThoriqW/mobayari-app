@@ -59,7 +59,37 @@ class _UserProfileViewState extends State<UserProfileView> {
                     ),
                   ),
                   Text(
-                    widget.data.name,
+                    widget.data.nama,
+                    style: TextStyle(
+                        color: GlobalColors.textColor,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Divider(
+                    height: 1,
+                    color: GlobalColors.stroke,
+                    thickness: 2,
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "No KK",
+                    style: TextStyle(
+                      color: GlobalColors.subText,
+                      fontSize: 12,
+                    ),
+                  ),
+                  Text(
+                    widget.data.noKK,
                     style: TextStyle(
                         color: GlobalColors.textColor,
                         fontSize: 16,
@@ -109,11 +139,131 @@ class _UserProfileViewState extends State<UserProfileView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Kecamatan",
+                    "Pekerjaan",
+                    style: TextStyle(
+                      color: GlobalColors.subText,
+                      fontSize: 12,
+                    ),
+                  ),
+                  Text(
+                    widget.data.pekerjaan,
+                    style: TextStyle(
+                        color: GlobalColors.textColor,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Divider(
+                    height: 1,
+                    color: GlobalColors.stroke,
+                    thickness: 2,
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "RT",
+                    style: TextStyle(
+                      color: GlobalColors.subText,
+                      fontSize: 12,
+                    ),
+                  ),
+                  Text(
+                    widget.data.rt,
+                    style: TextStyle(
+                        color: GlobalColors.textColor,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Divider(
+                    height: 1,
+                    color: GlobalColors.stroke,
+                    thickness: 2,
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "RW",
+                    style: TextStyle(
+                      color: GlobalColors.subText,
+                      fontSize: 12,
+                    ),
+                  ),
+                  Text(
+                    widget.data.rw,
+                    style: TextStyle(
+                        color: GlobalColors.textColor,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Divider(
+                    height: 1,
+                    color: GlobalColors.stroke,
+                    thickness: 2,
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "ID Pelanggan",
+                    style: TextStyle(
+                      color: GlobalColors.subText,
+                      fontSize: 12,
+                    ),
+                  ),
+                  Text(
+                    widget.data.idPelanggan,
+                    style: TextStyle(
+                        color: GlobalColors.textColor,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Divider(
+                    height: 1,
+                    color: GlobalColors.stroke,
+                    thickness: 2,
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Kelurahan",
                     style: TextStyle(color: GlobalColors.subText, fontSize: 12),
                   ),
                   Text(
-                    widget.data.kecamatan,
+                    widget.data.kelurahan,
                     style: TextStyle(
                         color: GlobalColors.textColor,
                         fontSize: 16,
@@ -140,7 +290,7 @@ class _UserProfileViewState extends State<UserProfileView> {
                     style: TextStyle(color: GlobalColors.subText, fontSize: 12),
                   ),
                   Text(
-                    widget.data.nomorHp,
+                    widget.data.noHP,
                     style: TextStyle(
                         color: GlobalColors.textColor,
                         fontSize: 16,

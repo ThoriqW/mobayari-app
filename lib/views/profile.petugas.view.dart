@@ -7,7 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../model/adminProfile.dart';
+import '../model/petugas.dart';
 
 import '../utils/global.colors.dart';
 import 'main.view.dart';
@@ -20,10 +20,13 @@ class MyProfileView extends StatefulWidget {
 }
 
 class _MyProfileViewState extends State<MyProfileView> {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _addressController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _namaPetugasController = TextEditingController();
+  final TextEditingController _alamatPetugasController =
+      TextEditingController();
+  final TextEditingController _kelurahanPetugasController =
+      TextEditingController();
+  final TextEditingController _emailPetugasController = TextEditingController();
+  final TextEditingController _noHPPetugasController = TextEditingController();
 
   late DatabaseReference dbRef;
 
@@ -35,33 +38,33 @@ class _MyProfileViewState extends State<MyProfileView> {
 
   String imageUrl = "";
 
-  late Map<dynamic, dynamic>? dataAdmin = {};
+  late Map<dynamic, dynamic>? dataPetugas = {};
 
   User? getCurrentUser() {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       email = user.email;
       uid = user.uid;
-      _emailController.text = email ?? '';
+      _emailPetugasController.text = email ?? '';
       return user;
     } else {
-      // Pengguna belum login
       return null;
     }
   }
 
   void readData() async {
     final snapshot =
-        await FirebaseDatabase.instance.ref().child("Admins/$uid").get();
+        await FirebaseDatabase.instance.ref().child("Petugas/$uid").get();
     if (snapshot.exists) {
-      dataAdmin = snapshot.value as Map<dynamic, dynamic>?;
-      if (dataAdmin != null) {
-        _nameController.text = dataAdmin?['nama'];
-        _addressController.text = dataAdmin?['alamat'];
-        _phoneNumberController.text = dataAdmin?['nomorHp'];
+      dataPetugas = snapshot.value as Map<dynamic, dynamic>?;
+      if (dataPetugas != null) {
+        _namaPetugasController.text = dataPetugas?['nama'];
+        _alamatPetugasController.text = dataPetugas?['alamat'];
+        _kelurahanPetugasController.text = dataPetugas?['kelurahan'];
+        _noHPPetugasController.text = dataPetugas?['noHP'];
         setState(() {
-          name = dataAdmin?['nama'];
-          imageUrl = dataAdmin?['image'];
+          name = dataPetugas?['nama'];
+          imageUrl = dataPetugas?['image'];
         });
       }
     }
@@ -123,7 +126,7 @@ class _MyProfileViewState extends State<MyProfileView> {
   @override
   void initState() {
     super.initState();
-    dbRef = FirebaseDatabase.instance.ref().child("Admins");
+    dbRef = FirebaseDatabase.instance.ref().child("Petugas");
     getCurrentUser();
     readData(); // Set the initial value
   }
@@ -236,32 +239,7 @@ class _MyProfileViewState extends State<MyProfileView> {
                         )),
                   ),
                   TextFormField(
-                    controller: _nameController,
-                    keyboardType: TextInputType.text,
-                    decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                        borderSide:
-                            BorderSide(color: GlobalColors.stroke, width: 1),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide:
-                            BorderSide(color: GlobalColors.mainColor, width: 2),
-                      ),
-                    ),
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 5.0, left: 2.0),
-                    child: Text("Email",
-                        style: TextStyle(
-                          color: GlobalColors.textColor,
-                        )),
-                  ),
-                  TextFormField(
-                    controller: _emailController,
+                    controller: _namaPetugasController,
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(
                       enabledBorder: OutlineInputBorder(
@@ -286,7 +264,7 @@ class _MyProfileViewState extends State<MyProfileView> {
                         )),
                   ),
                   TextFormField(
-                    controller: _addressController,
+                    controller: _alamatPetugasController,
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(
                       enabledBorder: OutlineInputBorder(
@@ -305,13 +283,63 @@ class _MyProfileViewState extends State<MyProfileView> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 5.0, left: 2.0),
-                    child: Text("Nomor HP",
+                    child: Text("Kelurahan",
                         style: TextStyle(
                           color: GlobalColors.textColor,
                         )),
                   ),
                   TextFormField(
-                    controller: _phoneNumberController,
+                    controller: _kelurahanPetugasController,
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(
+                      enabledBorder: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: GlobalColors.stroke, width: 1),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: GlobalColors.mainColor, width: 2),
+                      ),
+                    ),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 5.0, left: 2.0),
+                    child: Text("Email",
+                        style: TextStyle(
+                          color: GlobalColors.textColor,
+                        )),
+                  ),
+                  TextFormField(
+                    controller: _emailPetugasController,
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(
+                      enabledBorder: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: GlobalColors.stroke, width: 1),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: GlobalColors.mainColor, width: 2),
+                      ),
+                    ),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 5.0, left: 2.0),
+                    child: Text("No HP",
+                        style: TextStyle(
+                          color: GlobalColors.textColor,
+                        )),
+                  ),
+                  TextFormField(
+                    controller: _noHPPetugasController,
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(
                       enabledBorder: OutlineInputBorder(
@@ -334,16 +362,17 @@ class _MyProfileViewState extends State<MyProfileView> {
                       elevation: 0,
                     ),
                     onPressed: () {
-                      Profile profile = Profile(
-                          nama: _nameController.text,
-                          alamat: _addressController.text,
-                          email: _emailController.text,
-                          nomorHp: _phoneNumberController.text,
+                      Petugas profile = Petugas(
+                          nama: _namaPetugasController.text,
+                          alamat: _alamatPetugasController.text,
+                          kelurahan: _kelurahanPetugasController.text,
+                          email: _emailPetugasController.text,
+                          noHP: _noHPPetugasController.text,
                           image: imageUrl);
-                      if (dataAdmin != null) {
+                      if (dataPetugas != null) {
                         updateData(profile, "$uid");
                       } else {
-                        insertData(profile, '$uid');
+                        insertData(profile, "$uid");
                       }
                     },
                     child: Padding(
@@ -377,17 +406,17 @@ class _MyProfileViewState extends State<MyProfileView> {
     );
   }
 
-  void insertData(Profile profile, String uid) {
+  void insertData(Petugas petugas, String uid) {
     dbRef.child(uid).set(
-          profile.toJson(),
+          petugas.toJson(),
         );
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => const MainView()));
   }
 
-  void updateData(Profile profile, String uid) {
+  void updateData(Petugas petugas, String uid) {
     dbRef.child(uid).update(
-          profile.toJson(),
+          petugas.toJson(),
         );
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => const MainView()));
