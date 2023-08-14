@@ -17,6 +17,7 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
 
   String? errorText;
 
@@ -63,17 +64,36 @@ class _LoginViewState extends State<LoginView> {
                   const SizedBox(
                     height: 60,
                   ),
-                  TextFormGlobal(
-                      controller: _emailController,
-                      text: "Email",
-                      textInputType: TextInputType.emailAddress,
-                      obscure: false),
-                  const SizedBox(height: 15),
-                  TextFormGlobal(
-                      controller: _passwordController,
-                      text: "Password",
-                      textInputType: TextInputType.text,
-                      obscure: true),
+                  Form(
+                    key: formKey,
+                    child: Column(
+                      children: [
+                        TextFormGlobal(
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Email tidak boleh kosong';
+                            } else if (!RegExp(
+                                    r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                                .hasMatch(value)) {
+                              return 'Masukkan alamat email yang valid';
+                            }
+                            return null; // Return null for successful validation
+                          },
+                          controller: _emailController,
+                          text: "Email",
+                          textInputType: TextInputType.emailAddress,
+                          obscure: false,
+                        ),
+                        const SizedBox(height: 15),
+                        TextFormGlobal(
+                          controller: _passwordController,
+                          text: "Password",
+                          textInputType: TextInputType.text,
+                          obscure: true,
+                        ),
+                      ],
+                    ),
+                  ),
                   const SizedBox(
                     height: 20,
                   ),
@@ -90,15 +110,17 @@ class _LoginViewState extends State<LoginView> {
                   ButtonGlobal(
                       text: "Login",
                       onTap: () async {
-                        User? user = await loginWithEmailPassword(
-                            email: _emailController.text,
-                            password: _passwordController.text);
-                        if (user != null) {
-                          // ignore: use_build_context_synchronously
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const MainView()));
+                        if (formKey.currentState!.validate()) {
+                          User? user = await loginWithEmailPassword(
+                              email: _emailController.text,
+                              password: _passwordController.text);
+                          if (!mounted) return;
+                          if (user != null) {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const MainView()));
+                          }
                         }
                       }),
                   const SizedBox(

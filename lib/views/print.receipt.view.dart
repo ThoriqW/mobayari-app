@@ -28,7 +28,6 @@ class _PrintReceiptViewState extends State<PrintReceiptView> {
   @override
   void initState() {
     super.initState();
-
     WidgetsBinding.instance.addPostFrameCallback((_) => initBluetooth());
   }
 
@@ -75,7 +74,7 @@ class _PrintReceiptViewState extends State<PrintReceiptView> {
       ),
       body: RefreshIndicator(
         onRefresh: () =>
-            bluetoothPrint.startScan(timeout: Duration(seconds: 4)),
+            bluetoothPrint.startScan(timeout: const Duration(seconds: 4)),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: SingleChildScrollView(
@@ -94,9 +93,17 @@ class _PrintReceiptViewState extends State<PrintReceiptView> {
                 ),
                 Text(
                   tips,
-                  style: TextStyle(color: GlobalColors.subText),
+                  style: TextStyle(
+                      color: GlobalColors.subText, fontWeight: FontWeight.bold),
                 ),
-                const Divider(),
+                const SizedBox(
+                  height: 10,
+                ),
+                Divider(
+                  height: 1,
+                  color: GlobalColors.stroke, // Warna garis bawah
+                  thickness: 2, // Ketebalan garis bawah
+                ),
                 StreamBuilder<List<BluetoothDevice>>(
                   stream: bluetoothPrint.scanResults,
                   initialData: [],
@@ -121,13 +128,26 @@ class _PrintReceiptViewState extends State<PrintReceiptView> {
                         .toList(),
                   ),
                 ),
-                const Divider(),
+                Divider(
+                  height: 1,
+                  color: GlobalColors.stroke, // Warna garis bawah
+                  thickness: 2, // Ketebalan garis bawah
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Expanded(
                       child: OutlinedButton(
                         style: OutlinedButton.styleFrom(
+                          side: BorderSide(
+                            color: _connected
+                                ? GlobalColors.stroke
+                                : GlobalColors.mainColor, // Border color
+                            width: 2.0, // Border width
+                          ),
                           foregroundColor: GlobalColors.mainColor,
                           textStyle: const TextStyle(
                             fontWeight: FontWeight.bold,
@@ -156,6 +176,12 @@ class _PrintReceiptViewState extends State<PrintReceiptView> {
                     Expanded(
                       child: OutlinedButton(
                         style: OutlinedButton.styleFrom(
+                          side: BorderSide(
+                            color: _connected
+                                ? GlobalColors.mainColor
+                                : GlobalColors.stroke, // Border color
+                            width: 2.0, // Border width
+                          ),
                           foregroundColor: GlobalColors.mainColor,
                           textStyle: const TextStyle(
                             fontWeight: FontWeight.bold,
@@ -174,7 +200,17 @@ class _PrintReceiptViewState extends State<PrintReceiptView> {
                     ),
                   ],
                 ),
-                const Divider(),
+                const SizedBox(
+                  height: 10,
+                ),
+                Divider(
+                  height: 1,
+                  color: GlobalColors.stroke, // Warna garis bawah
+                  thickness: 2, // Ketebalan garis bawah
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
@@ -205,6 +241,12 @@ class _PrintReceiptViewState extends State<PrintReceiptView> {
                             list.add(LineText(
                                 type: LineText.TYPE_TEXT,
                                 content: 'Bukti Transaksi',
+                                weight: 1,
+                                align: LineText.ALIGN_CENTER,
+                                linefeed: 1));
+                            list.add(LineText(
+                                type: LineText.TYPE_TEXT,
+                                content: widget.data.kelurahan,
                                 weight: 1,
                                 align: LineText.ALIGN_CENTER,
                                 linefeed: 1));
@@ -301,7 +343,7 @@ class _PrintReceiptViewState extends State<PrintReceiptView> {
                       padding:
                           const EdgeInsets.fromLTRB(24.0, 12.0, 24.0, 12.0),
                       child: Text(
-                        _connected ? "Cetak" : "Cari Printer",
+                        "Cetak",
                         style: TextStyle(
                             color: GlobalColors.whiteColor,
                             fontSize: 16,
@@ -309,7 +351,7 @@ class _PrintReceiptViewState extends State<PrintReceiptView> {
                       ),
                     ),
                   ),
-                )
+                ),
               ],
             ),
           ),

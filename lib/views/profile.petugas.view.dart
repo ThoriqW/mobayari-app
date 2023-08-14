@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mobayari_app_dev/views/login.view.dart';
+import 'package:mobayari_app_dev/views/widgets/text.form.global.dart';
 
 import '../model/petugas.dart';
 
@@ -62,10 +64,12 @@ class _MyProfileViewState extends State<MyProfileView> {
         _alamatPetugasController.text = dataPetugas?['alamat'];
         _kelurahanPetugasController.text = dataPetugas?['kelurahan'];
         _noHPPetugasController.text = dataPetugas?['noHP'];
-        setState(() {
-          name = dataPetugas?['nama'];
-          imageUrl = dataPetugas?['image'];
-        });
+        if (mounted) {
+          setState(() {
+            name = dataPetugas?['nama'];
+            imageUrl = dataPetugas?['image'];
+          });
+        }
       }
     }
   }
@@ -81,12 +85,11 @@ class _MyProfileViewState extends State<MyProfileView> {
         setState(() {
           isLoading = true; // Show loading indicator while uploading
         });
-        // Store image to Firebase Storage
         String uniqueFileName =
             DateTime.now().millisecondsSinceEpoch.toString();
 
         Reference referenceRoot = FirebaseStorage.instance.ref();
-        Reference referenceDirImages = referenceRoot.child("profile_pictures");
+        Reference referenceDirImages = referenceRoot.child("profile-pictures");
         Reference referenceImageToUpload =
             referenceDirImages.child(uniqueFileName);
 
@@ -137,25 +140,66 @@ class _MyProfileViewState extends State<MyProfileView> {
       body: Stack(
         children: [
           SingleChildScrollView(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Padding(
                     padding: const EdgeInsets.only(top: 50.0),
-                    child: Text(
-                      "Profile Petugas",
-                      style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: GlobalColors.mainColor),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Profil Petugas",
+                          style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: GlobalColors.mainColor),
+                        ),
+                        PopupMenuButton<String>(
+                          icon: Container(
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: GlobalColors.mainColor,
+                              borderRadius: BorderRadius.circular(8.0),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black.withOpacity(0.1),
+                                    blurRadius: 10)
+                              ],
+                            ),
+                            child: Icon(
+                              Icons.filter_list,
+                              color: GlobalColors.whiteColor,
+                            ),
+                          ),
+                          onSelected: (String result) {
+                            switch (result) {
+                              case 'Keluar':
+                                logout();
+                                break;
+                              default:
+                            }
+                          },
+                          itemBuilder: (BuildContext context) =>
+                              <PopupMenuEntry<String>>[
+                            const PopupMenuItem<String>(
+                              value: 'Keluar',
+                              child: Text('Keluar'),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Row(
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Row(
                     children: [
                       Container(
                         decoration: BoxDecoration(
@@ -228,135 +272,66 @@ class _MyProfileViewState extends State<MyProfileView> {
                       ),
                     ],
                   ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 5.0),
-                    child: Text("Nama",
-                        style: TextStyle(
-                          color: GlobalColors.textColor,
-                        )),
-                  ),
-                  TextFormField(
-                    controller: _namaPetugasController,
-                    keyboardType: TextInputType.text,
-                    decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                        borderSide:
-                            BorderSide(color: GlobalColors.stroke, width: 1),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide:
-                            BorderSide(color: GlobalColors.mainColor, width: 2),
-                      ),
-                    ),
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 5.0, left: 2.0),
-                    child: Text("Alamat",
-                        style: TextStyle(
-                          color: GlobalColors.textColor,
-                        )),
-                  ),
-                  TextFormField(
-                    controller: _alamatPetugasController,
-                    keyboardType: TextInputType.text,
-                    decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                        borderSide:
-                            BorderSide(color: GlobalColors.stroke, width: 1),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide:
-                            BorderSide(color: GlobalColors.mainColor, width: 2),
-                      ),
-                    ),
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 5.0, left: 2.0),
-                    child: Text("Kelurahan",
-                        style: TextStyle(
-                          color: GlobalColors.textColor,
-                        )),
-                  ),
-                  TextFormField(
-                    controller: _kelurahanPetugasController,
-                    keyboardType: TextInputType.text,
-                    decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                        borderSide:
-                            BorderSide(color: GlobalColors.stroke, width: 1),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide:
-                            BorderSide(color: GlobalColors.mainColor, width: 2),
-                      ),
-                    ),
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 5.0, left: 2.0),
-                    child: Text("Email",
-                        style: TextStyle(
-                          color: GlobalColors.textColor,
-                        )),
-                  ),
-                  TextFormField(
-                    controller: _emailPetugasController,
-                    keyboardType: TextInputType.text,
-                    decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                        borderSide:
-                            BorderSide(color: GlobalColors.stroke, width: 1),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide:
-                            BorderSide(color: GlobalColors.mainColor, width: 2),
-                      ),
-                    ),
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 5.0, left: 2.0),
-                    child: Text("No HP",
-                        style: TextStyle(
-                          color: GlobalColors.textColor,
-                        )),
-                  ),
-                  TextFormField(
-                    controller: _noHPPetugasController,
-                    keyboardType: TextInputType.text,
-                    decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                        borderSide:
-                            BorderSide(color: GlobalColors.stroke, width: 1),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide:
-                            BorderSide(color: GlobalColors.mainColor, width: 2),
-                      ),
-                    ),
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  ElevatedButton(
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0, vertical: 10),
+                  width: double.infinity,
+                  decoration: BoxDecoration(color: GlobalColors.bgGray),
+                  child: Text("Kontak",
+                      style: TextStyle(
+                          color: GlobalColors.subText,
+                          fontWeight: FontWeight.bold)),
+                ),
+                TextFormGlobal(
+                  controller: _namaPetugasController,
+                  text: "Nama Lengkap",
+                  textInputType: TextInputType.name,
+                  obscure: false,
+                ),
+                TextFormGlobal(
+                  controller: _noHPPetugasController,
+                  text: "Nomor Telepon",
+                  textInputType: TextInputType.phone,
+                  obscure: false,
+                ),
+                TextFormGlobal(
+                  controller: _emailPetugasController,
+                  text: "Email",
+                  textInputType: TextInputType.emailAddress,
+                  obscure: false,
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0, vertical: 10),
+                  width: double.infinity,
+                  decoration: BoxDecoration(color: GlobalColors.bgGray),
+                  child: Text("Alamat",
+                      style: TextStyle(
+                          color: GlobalColors.subText,
+                          fontWeight: FontWeight.bold)),
+                ),
+                TextFormGlobal(
+                  controller: _alamatPetugasController,
+                  text: "Alamat",
+                  textInputType: TextInputType.streetAddress,
+                  obscure: false,
+                ),
+                TextFormGlobal(
+                  controller: _kelurahanPetugasController,
+                  text: "Kelurahan",
+                  textInputType: TextInputType.text,
+                  obscure: false,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: GlobalColors.mainColor,
                       elevation: 0,
@@ -377,7 +352,7 @@ class _MyProfileViewState extends State<MyProfileView> {
                     },
                     child: Padding(
                       padding:
-                          const EdgeInsets.fromLTRB(24.0, 12.0, 24.0, 12.0),
+                          const EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 12.0),
                       child: Text(
                         "Simpan",
                         style: TextStyle(
@@ -386,9 +361,9 @@ class _MyProfileViewState extends State<MyProfileView> {
                             fontWeight: FontWeight.bold),
                       ),
                     ),
-                  )
-                ],
-              ),
+                  ),
+                )
+              ],
             ),
           ),
           if (isLoading)
@@ -404,6 +379,13 @@ class _MyProfileViewState extends State<MyProfileView> {
         ],
       ),
     );
+  }
+
+  void logout() async {
+    await FirebaseAuth.instance.signOut();
+    if (!mounted) return;
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => const LoginView()));
   }
 
   void insertData(Petugas petugas, String uid) {

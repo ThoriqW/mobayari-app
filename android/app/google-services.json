@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "319025317847",
-    "firebase_url": "https://mobayari-app-default-rtdb.asia-southeast1.firebasedatabase.app",
-    "project_id": "mobayari-app",
-    "storage_bucket": "mobayari-app.appspot.com"
+    "project_number": "1051635595768",
+    "firebase_url": "https://mobayari-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "mobayari",
+    "storage_bucket": "mobayari.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:319025317847:android:c98ba6e52a11297e916d92",
+        "mobilesdk_app_id": "1:1051635595768:android:b0d4b0dd48fd7b97f6be0d",
         "android_client_info": {
           "package_name": "com.example.mobayari_app_dev"
         }
       },
       "oauth_client": [
         {
-          "client_id": "319025317847-4r0chqp0e8gjijfo5iso7q4kv0smngr7.apps.googleusercontent.com",
+          "client_id": "1051635595768-orqhvfq8132bosf24ueju8iqpgo2i6lp.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAA_C5Xl4PvlPhpuP6XKsFiHQMBPAVgB6o"
+          "current_key": "AIzaSyBQVj76qdHZEDynjRx1IPu4veoz5iSWjX0"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "319025317847-4r0chqp0e8gjijfo5iso7q4kv0smngr7.apps.googleusercontent.com",
+              "client_id": "1051635595768-orqhvfq8132bosf24ueju8iqpgo2i6lp.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

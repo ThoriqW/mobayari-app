@@ -6,4 +6,5 @@ class GlobalColors {
   static HexColor subText = HexColor("#ABABAB");
   static HexColor whiteColor = HexColor("#ffffff");
   static HexColor stroke = HexColor("#DDDDDD");
+  static HexColor bgGray = HexColor("#F2F2F2");
 }

@@ -19,6 +19,31 @@ class _RegisterViewState extends State<RegisterView> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmationPassword = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+
+  String? errorText;
+
+  Future<User?> registerWithEmailPassword(
+      {required String email, required String password}) async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user;
+    try {
+      UserCredential userCredential = await auth.createUserWithEmailAndPassword(
+          email: email, password: password);
+      user = userCredential.user;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        setState(() {
+          errorText = "Kata sandi harus minimal 6 karakter";
+        });
+      } else if (e.code == 'email-already-in-use') {
+        setState(() {
+          errorText = "Email sudah digunakan oleh akun lain";
+        });
+      }
+    }
+    return user;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,44 +70,77 @@ class _RegisterViewState extends State<RegisterView> {
                   const SizedBox(
                     height: 60,
                   ),
-                  TextFormGlobal(
-                      controller: _emailController,
-                      text: "Email",
-                      textInputType: TextInputType.emailAddress,
-                      obscure: false),
-                  const SizedBox(height: 15),
-                  TextFormGlobal(
-                      controller: _passwordController,
-                      text: "Password",
-                      textInputType: TextInputType.text,
-                      obscure: true),
+                  Form(
+                    key: formKey,
+                    child: Column(
+                      children: [
+                        TextFormGlobal(
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Email tidak boleh kosong';
+                              } else if (!RegExp(
+                                      r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                                  .hasMatch(value)) {
+                                return 'Masukkan alamat email yang valid';
+                              }
+                              return null; // Return null for successful validation
+                            },
+                            controller: _emailController,
+                            text: "Email",
+                            textInputType: TextInputType.emailAddress,
+                            obscure: false),
+                        const SizedBox(height: 15),
+                        TextFormGlobal(
+                            controller: _passwordController,
+                            text: "Password",
+                            textInputType: TextInputType.text,
+                            obscure: true),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        TextFormGlobal(
+                          validator: (value) {
+                            if (value != _passwordController.text) {
+                              return 'Konfirmasi password tidak cocok';
+                            }
+                            return null;
+                          },
+                          controller: _confirmationPassword,
+                          text: "Konfirmasi Password",
+                          textInputType: TextInputType.text,
+                          obscure: true,
+                        ),
+                      ],
+                    ),
+                  ),
                   const SizedBox(
                     height: 20,
                   ),
-                  TextFormGlobal(
-                      controller: _confirmationPassword,
-                      text: "Confirmation Password",
-                      textInputType: TextInputType.text,
-                      obscure: true),
+                  if (errorText != null)
+                    Text(
+                      errorText!,
+                      style: const TextStyle(
+                        color: Colors.red,
+                      ),
+                    ),
                   const SizedBox(
                     height: 20,
                   ),
                   ButtonGlobal(
                     text: "Daftar",
-                    onTap: () {
-                      FirebaseAuth.instance
-                          .createUserWithEmailAndPassword(
-                              email: _emailController.text,
-                              password: _passwordController.text)
-                          .then(
-                        (value) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const MainView()),
-                          );
-                        },
-                      );
+                    onTap: () async {
+                      if (formKey.currentState!.validate()) {
+                        User? user = await registerWithEmailPassword(
+                            email: _emailController.text,
+                            password: _passwordController.text);
+                        if (!mounted) return;
+                        if (user != null) {
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const MainView()));
+                        }
+                      }
                     },
                   ),
                   const SizedBox(

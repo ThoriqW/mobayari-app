@@ -18,8 +18,8 @@ class _PaymentViewState extends State<PaymentView> {
   Map<String, int> listJenisKegiatan = {
     'Pilih Kegiatan': 0,
     'Rumah Tinggal TR4 Kelas IV Darurat': 10000,
-    'kegiatan2': 20000,
-    'kegiatan3': 30000,
+    'Rumah Tinggala TR1 Kelas I Permanen Bertingkat': 35000,
+    'Perguruan Tinggi': 100000,
   };
   String selectedKegiatan = 'Pilih Kegiatan';
 
@@ -160,8 +160,9 @@ class _PaymentViewState extends State<PaymentView> {
                           style: TextStyle(
                             color: listJenisKegiatan.keys.first == kegiatan
                                 ? GlobalColors
-                                    .subText // Ganti warna untuk item pertama
+                                    .subText
                                 : null,
+                            fontSize: 12,
                           ),
                         ),
                       );
@@ -246,7 +247,7 @@ class _PaymentViewState extends State<PaymentView> {
             Padding(
               padding: const EdgeInsets.only(top: 10),
               child: Text(
-                "Pembayaran Sampah",
+                selectedKegiatan,
                 style: TextStyle(color: GlobalColors.textColor, fontSize: 16),
               ),
             ),
@@ -308,7 +309,7 @@ class _PaymentViewState extends State<PaymentView> {
                   );
                   Payment payment = Payment(
                     jenisKegiatan: selectedKegiatan,
-                    harga: harga,
+                    harga: formatCurrency.format(int.parse(harga)),
                     bulan: selectedBulan.length.toString(),
                     namaBulan: selectedBulan,
                     idMasyarakat: widget.data.idPelanggan,
@@ -355,8 +356,10 @@ class _PaymentViewState extends State<PaymentView> {
                   padding: const EdgeInsets.fromLTRB(24.0, 12.0, 24.0, 12.0),
                   child: Text(
                     "Bayar",
-                    style:
-                        TextStyle(color: GlobalColors.whiteColor, fontSize: 16),
+                    style: TextStyle(
+                        color: GlobalColors.whiteColor,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
                   ),
                 ),
               ),

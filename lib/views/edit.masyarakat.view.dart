@@ -1,18 +1,20 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:mobayari_app_dev/model/masyarakat.dart';
-import 'package:mobayari_app_dev/views/main.view.dart';
+import 'package:mobayari_app_dev/views/profile.masyarakat.view.dart';
 import 'package:mobayari_app_dev/views/widgets/text.form.global.dart';
+
 import '../utils/global.colors.dart';
 
-class CreateUserView extends StatefulWidget {
-  const CreateUserView({super.key});
+class EditMasyarakatView extends StatefulWidget {
+  const EditMasyarakatView({super.key, required this.masyarakat});
+  final Masyarakat masyarakat;
 
   @override
-  State<CreateUserView> createState() => _CreateUserViewState();
+  State<EditMasyarakatView> createState() => _EditMasyarakatViewState();
 }
 
-class _CreateUserViewState extends State<CreateUserView> {
+class _EditMasyarakatViewState extends State<EditMasyarakatView> {
   final TextEditingController _namaController = TextEditingController();
   final TextEditingController _noKKController = TextEditingController();
   final TextEditingController _pekerjaanController = TextEditingController();
@@ -24,8 +26,6 @@ class _CreateUserViewState extends State<CreateUserView> {
   final TextEditingController _noHPController = TextEditingController();
 
   final formKey = GlobalKey<FormState>();
-
-  late DatabaseReference dbRef;
 
   List<String> kelurahanItems = [
     'Besusu Timur',
@@ -50,9 +50,24 @@ class _CreateUserViewState extends State<CreateUserView> {
   String? selectedRT;
   String? selectedRW;
 
+  late DatabaseReference dbRef;
+
   @override
   void initState() {
     super.initState();
+    _namaController.text = widget.masyarakat.nama;
+    _noKKController.text = widget.masyarakat.noKK;
+    _pekerjaanController.text = widget.masyarakat.pekerjaan;
+    _alamatController.text = widget.masyarakat.alamat;
+    _rtController.text = widget.masyarakat.rt;
+    _rwController.text = widget.masyarakat.rw;
+    _idPelangganController.text = widget.masyarakat.idPelanggan;
+    _kelurahanController.text = widget.masyarakat.kelurahan;
+    _noHPController.text = widget.masyarakat.noHP;
+
+    selectedKelurahan = widget.masyarakat.kelurahan;
+    selectedRT = widget.masyarakat.rt;
+    selectedRW = widget.masyarakat.rw;
     dbRef = FirebaseDatabase.instance.ref().child("Masyarakat");
   }
 
@@ -299,7 +314,7 @@ class _CreateUserViewState extends State<CreateUserView> {
                         kelurahan: _kelurahanController.text,
                         noHP: _noHPController.text,
                       );
-                      insertData(masyarakat);
+                      updateData(masyarakat, widget.masyarakat.id!);
                     }
                   },
                   child: Padding(
@@ -324,22 +339,17 @@ class _CreateUserViewState extends State<CreateUserView> {
     );
   }
 
-  void insertData(Masyarakat masyarakat) {
-    if (_namaController.text.isNotEmpty &&
-        _noKKController.text.isNotEmpty &&
-        _pekerjaanController.text.isNotEmpty &&
-        _alamatController.text.isNotEmpty &&
-        _rtController.text.isNotEmpty &&
-        _rwController.text.isNotEmpty &&
-        _idPelangganController.text.isNotEmpty &&
-        _kelurahanController.text.isNotEmpty) {
-      dbRef.push().set(
-            masyarakat.toJson(),
-          );
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const MainView()));
-    } else {
-      print("Field must be not empty");
-    }
+  void updateData(Masyarakat masyarakat, String uid) {
+    dbRef.child(uid).update(
+          masyarakat.toJson(),
+        );
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => UserProfileView(
+          data: masyarakat,
+        ),
+      ),
+    );
   }
 }

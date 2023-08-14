@@ -29,26 +29,32 @@ class _MainViewState extends State<MainView> {
       resizeToAvoidBottomInset: false,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const CreateUserView(),
-              ),
-            );
-          },
-          backgroundColor: GlobalColors.mainColor,
-          elevation: 0,
-          child: const Icon(Icons.add)),
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: onTap,
-        currentIndex: currentIndex,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile')
-        ],
-        selectedItemColor: GlobalColors.mainColor,
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const CreateUserView(),
+            ),
+          );
+        },
+        backgroundColor: GlobalColors.mainColor,
+        elevation: 4.0,
+        child: const Icon(Icons.add),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        clipBehavior: Clip.antiAlias,
+        shape: const CircularNotchedRectangle(),
         elevation: 0,
+        child: BottomNavigationBar(
+          backgroundColor: GlobalColors.whiteColor,
+          onTap: onTap,
+          currentIndex: currentIndex,
+          items: const [
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+            BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile')
+          ],
+          selectedItemColor: GlobalColors.mainColor,
+        ),
       ),
     );
   }

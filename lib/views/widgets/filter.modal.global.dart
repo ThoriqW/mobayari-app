@@ -36,7 +36,7 @@ class _FilterModalGlobalState extends State<FilterModalGlobal> {
       onPressed: () => showDialog<String>(
         context: context,
         builder: (BuildContext context) => AlertDialog(
-          title: const Text('Pilih Kecamatan'),
+          title: const Text('Pilih RW'),
           content: SizedBox(
             width: 500,
             child: Wrap(

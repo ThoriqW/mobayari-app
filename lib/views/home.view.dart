@@ -51,14 +51,18 @@ class _HomeViewState extends State<HomeView> {
             keterangan: value['keterangan']);
         dataUser.add(data);
       });
-      setState(() {
-        userDisplay = dataUser;
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          userDisplay = dataUser;
+          isLoading = false;
+        });
+      }
     } else {
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
 
@@ -77,7 +81,7 @@ class _HomeViewState extends State<HomeView> {
     } else {
       setState(() {
         userDisplay = dataUser
-            .where((user) => selectedCategories.contains(user.kelurahan))
+            .where((user) => selectedCategories.contains(user.rw))
             .toList();
       });
     }
@@ -93,7 +97,7 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     final List<String> categories =
-        dataUser.map((user) => user.kelurahan.toString()).toSet().toList();
+        dataUser.map((user) => user.rw.toString()).toSet().toList();
 
     return Scaffold(
       body: Container(
@@ -166,8 +170,6 @@ class _HomeViewState extends State<HomeView> {
                           itemCount: userDisplay.length,
                           itemBuilder: (context, index) => InkWell(
                             onTap: () {
-                              // Handle the onTap event for the specific item
-                              // You can perform any desired action here
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -189,7 +191,7 @@ class _HomeViewState extends State<HomeView> {
                                 ),
                               ),
                               subtitle: Text(
-                                userDisplay[index].kelurahan,
+                                userDisplay[index].rw,
                                 style: const TextStyle(fontSize: 12.0),
                               ),
                             ),

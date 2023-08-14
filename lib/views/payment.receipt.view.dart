@@ -40,7 +40,9 @@ class _PaymentReceiptViewState extends State<PaymentReceiptView> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => PrintReceiptView(data: widget.data,)));
+                      builder: (context) => PrintReceiptView(
+                            data: widget.data,
+                          )));
             },
             child: const Column(
               mainAxisSize: MainAxisSize.min,
@@ -85,6 +87,10 @@ class _PaymentReceiptViewState extends State<PaymentReceiptView> {
                   const Text(
                     "Bukti Transaksi",
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    widget.data.kelurahan,
+                    style: const TextStyle(fontSize: 16),
                   ),
                   Text(
                     widget.data.nama,

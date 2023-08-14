@@ -28,23 +28,26 @@ class _CheckboxBulanGlobalState extends State<CheckboxBulanGlobal> {
     return Wrap(
       direction: Axis.vertical,
       crossAxisAlignment: WrapCrossAlignment.center,
-      spacing: -10,
+      spacing: -5,
       children: [
-        Theme(
-          data: Theme.of(context).copyWith(
-            unselectedWidgetColor: GlobalColors.stroke,
-          ),
-          child: Checkbox(
-            checkColor: GlobalColors.whiteColor,
-            activeColor: GlobalColors.mainColor,
-            value: isChecked,
-            onChanged: (bool? value) {
-              setState(() {
-                isChecked = value ?? false;
-                widget.onChanged(isChecked);
-              });
-            },
-            visualDensity: VisualDensity.compact,
+        Transform.scale(
+          scale: 1.5,
+          child: Theme(
+            data: Theme.of(context).copyWith(
+              unselectedWidgetColor: GlobalColors.stroke,
+            ),
+            child: Checkbox(
+              checkColor: GlobalColors.whiteColor,
+              activeColor: GlobalColors.mainColor,
+              value: isChecked,
+              onChanged: (bool? value) {
+                setState(() {
+                  isChecked = value ?? false;
+                  widget.onChanged(isChecked);
+                });
+              },
+              visualDensity: VisualDensity.compact,
+            ),
           ),
         ),
         Text(widget.bulanItem),
