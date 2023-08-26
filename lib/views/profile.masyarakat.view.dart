@@ -41,8 +41,9 @@ class _UserProfileViewState extends State<UserProfileView> {
   }
 
   void readBulanDibayar() async {
-    String? idMasyarakat = widget.data.idPelanggan;
-    Query query = dbRef.orderByChild("idMasyarakat").equalTo(idMasyarakat);
+    String? nomorKartuKeluarga = widget.data.nomorKartuKeluarga;
+    Query query =
+        dbRef.orderByChild("nomorKartuKeluarga").equalTo(nomorKartuKeluarga);
     DatabaseEvent event = await query.once();
     DataSnapshot snapshot = event.snapshot;
     if (snapshot.value != null) {
@@ -58,11 +59,12 @@ class _UserProfileViewState extends State<UserProfileView> {
         int orderB = mappingBulan[b] ?? 0;
         return orderA - orderB;
       });
-      print(tempNamaBulan);
-      setState(() {
-        namaBulan = tempNamaBulan; // Update the state with sorted month names
-      });
-      print(namaBulan);
+      if (mounted) {
+        setState(() {
+          namaBulan = tempNamaBulan; // Update the state with sorted month names
+        });
+      }
+      
     }
   }
 
@@ -175,7 +177,7 @@ class _UserProfileViewState extends State<UserProfileView> {
                     ),
                   ),
                   Text(
-                    widget.data.noKK,
+                    widget.data.nomorKartuKeluarga,
                     style: TextStyle(
                         color: GlobalColors.textColor,
                         fontSize: 16,
@@ -376,7 +378,7 @@ class _UserProfileViewState extends State<UserProfileView> {
                     style: TextStyle(color: GlobalColors.subText, fontSize: 12),
                   ),
                   Text(
-                    widget.data.noHP,
+                    widget.data.nomorTelepon,
                     style: TextStyle(
                         color: GlobalColors.textColor,
                         fontSize: 16,
@@ -403,7 +405,7 @@ class _UserProfileViewState extends State<UserProfileView> {
                     style: TextStyle(color: GlobalColors.subText, fontSize: 12),
                   ),
                   Text(
-                    namaBulan.join(" "),
+                    namaBulan.join(", "),
                     style: TextStyle(
                         color: GlobalColors.textColor,
                         fontSize: 16,
@@ -476,8 +478,10 @@ class _UserProfileViewState extends State<UserProfileView> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) =>
-                                PaymentView(data: widget.data)));
+                            builder: (context) => PaymentView(
+                                  data: widget.data,
+                                  bulanDibayar: namaBulan,
+                                )));
                   },
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(24.0, 12.0, 24.0, 12.0),

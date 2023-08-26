@@ -8,8 +8,10 @@ import '../model/payment.dart';
 import '../utils/global.colors.dart';
 
 class PaymentView extends StatefulWidget {
-  const PaymentView({super.key, required this.data});
+  const PaymentView(
+      {super.key, required this.data, required this.bulanDibayar});
   final Masyarakat data;
+  final List<String> bulanDibayar;
   @override
   State<PaymentView> createState() => _PaymentViewState();
 }
@@ -58,13 +60,13 @@ class _PaymentViewState extends State<PaymentView> {
   String total = "";
   String? errorText;
 
-  DatabaseReference dbRef = FirebaseDatabase.instance.ref().child("Pembayaran");
+  DatabaseReference dbRef = FirebaseDatabase.instance.ref();
 
   @override
   void initState() {
     super.initState();
     DateTime date = DateTime.now();
-    newDate = DateTime(date.year, date.month - 1, date.day);
+    newDate = DateTime(date.year, date.month, date.day);
     currentTime = DateFormat('hh:mm:ss').format(date);
     harga = "${listJenisKegiatan[selectedKegiatan]}";
     selectedBulan.add(bulan[date.month - 1]);
@@ -105,14 +107,32 @@ class _PaymentViewState extends State<PaymentView> {
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
                   color: GlobalColors.mainColor),
-              child: Center(
-                child: Text(
-                  total,
-                  style: TextStyle(
-                      fontSize: 50,
-                      fontWeight: FontWeight.bold,
-                      color: GlobalColors.whiteColor),
-                ),
+              child: Stack(
+                alignment:
+                    Alignment.topLeft, // Atur posisi teks di sudut kiri atas
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      "TOTAL",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: GlobalColors.whiteColor,
+                      ),
+                    ),
+                  ),
+                  Center(
+                    child: Text(
+                      total,
+                      style: TextStyle(
+                        fontSize: 50,
+                        fontWeight: FontWeight.bold,
+                        color: GlobalColors.whiteColor,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             const SizedBox(
@@ -159,8 +179,7 @@ class _PaymentViewState extends State<PaymentView> {
                           kegiatan,
                           style: TextStyle(
                             color: listJenisKegiatan.keys.first == kegiatan
-                                ? GlobalColors
-                                    .subText
+                                ? GlobalColors.subText
                                 : null,
                             fontSize: 12,
                           ),
@@ -242,7 +261,10 @@ class _PaymentViewState extends State<PaymentView> {
               harga != ''
                   ? formatCurrency.format(listJenisKegiatan[selectedKegiatan])
                   : '0',
-              style: TextStyle(color: GlobalColors.textColor, fontSize: 16),
+              style: TextStyle(
+                  color: GlobalColors.textColor,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 10),
@@ -312,7 +334,7 @@ class _PaymentViewState extends State<PaymentView> {
                     harga: formatCurrency.format(int.parse(harga)),
                     bulan: selectedBulan.length.toString(),
                     namaBulan: selectedBulan,
-                    idMasyarakat: widget.data.idPelanggan,
+                    nomorKartuKeluarga: widget.data.nomorKartuKeluarga,
                     nama: widget.data.nama,
                     alamat: widget.data.alamat,
                     kelurahan: widget.data.kelurahan,
@@ -324,24 +346,7 @@ class _PaymentViewState extends State<PaymentView> {
                   );
                   if (harga != "0" &&
                       selectedBulan.length.toString().isNotEmpty) {
-                    Future.delayed(const Duration(seconds: 2), () {
-                      return makePayment(
-                          payment); // This returns a Future, no need to await it here.
-                    }).then((_) {
-                      if (Navigator.canPop(context)) {
-                        Navigator.pop(
-                            context); // Close the CircularProgressIndicator dialog.
-                      }
-                      if (!mounted) return;
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => PaymentReceiptView(
-                            data: payment,
-                          ),
-                        ),
-                      );
-                    });
+                    makePayment(payment);
                   } else {
                     if (Navigator.canPop(context)) {
                       Navigator.pop(
@@ -374,6 +379,33 @@ class _PaymentViewState extends State<PaymentView> {
   }
 
   void makePayment(Payment payment) {
-    dbRef.push().set(payment.toJson());
+    List<String> alreadyPaidBulan = selectedBulan.where((bulan) {
+      return widget.bulanDibayar.contains(bulan);
+    }).toList();
+    if (alreadyPaidBulan.isEmpty) {
+      Future.delayed(const Duration(seconds: 2), () {
+        dbRef.child("Pembayaran").push().set(payment.toJson());
+      }).then((_) {
+        if (Navigator.canPop(context)) {
+          Navigator.pop(context);
+        }
+        if (!mounted) return;
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PaymentReceiptView(
+              data: payment,
+            ),
+          ),
+        );
+      });
+    } else {
+      if (Navigator.canPop(context)) {
+        Navigator.pop(context); // Close the CircularProgressIndicator dialog.
+      }
+      setState(() {
+        errorText = "Bulan ${alreadyPaidBulan.join(', ')} sudah dibayar";
+      });
+    }
   }
 }

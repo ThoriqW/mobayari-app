@@ -14,21 +14,22 @@ class CreateUserView extends StatefulWidget {
 
 class _CreateUserViewState extends State<CreateUserView> {
   final TextEditingController _namaController = TextEditingController();
-  final TextEditingController _noKKController = TextEditingController();
+  final TextEditingController _nomorKartuKeluargaController =
+      TextEditingController();
   final TextEditingController _pekerjaanController = TextEditingController();
   final TextEditingController _alamatController = TextEditingController();
   final TextEditingController _rtController = TextEditingController();
   final TextEditingController _rwController = TextEditingController();
   final TextEditingController _idPelangganController = TextEditingController();
   final TextEditingController _kelurahanController = TextEditingController();
-  final TextEditingController _noHPController = TextEditingController();
+  final TextEditingController _nomorTeleponController = TextEditingController();
 
   final formKey = GlobalKey<FormState>();
 
   late DatabaseReference dbRef;
 
   List<String> kelurahanItems = [
-    'Besusu Timur',
+    'BESUSU TIMUR',
   ];
 
   List<String> rtItems = [
@@ -49,6 +50,7 @@ class _CreateUserViewState extends State<CreateUserView> {
   String? selectedKelurahan;
   String? selectedRT;
   String? selectedRW;
+  String? errorText;
 
   @override
   void initState() {
@@ -106,7 +108,7 @@ class _CreateUserViewState extends State<CreateUserView> {
                 obscure: false,
               ),
               TextFormGlobal(
-                controller: _noHPController,
+                controller: _nomorTeleponController,
                 text: "Nomor Telepon",
                 textInputType: TextInputType.phone,
                 obscure: false,
@@ -127,107 +129,119 @@ class _CreateUserViewState extends State<CreateUserView> {
                 textInputType: TextInputType.streetAddress,
                 obscure: false,
               ),
-              Form(
-                child: DropdownButtonFormField<String>(
-                  decoration: InputDecoration(
-                    enabledBorder: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(color: GlobalColors.stroke, width: 1),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(color: GlobalColors.mainColor, width: 2),
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16.0, vertical: 15.0),
+              DropdownButtonFormField<String>(
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Kelurahan tidak boleh kosong';
+                  }
+                  return null; // Return null for successful validation
+                },
+                decoration: InputDecoration(
+                  enabledBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: GlobalColors.stroke, width: 1),
                   ),
-                  isDense: true,
-                  value: selectedKelurahan,
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      _kelurahanController.text = newValue ?? '';
-                    });
-                  },
-                  items: kelurahanItems.map((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(
-                        value,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    );
-                  }).toList(),
-                  hint: const Text("Kelurahan",
-                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: GlobalColors.mainColor, width: 2),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16.0, vertical: 15.0),
                 ),
+                isDense: true,
+                value: selectedKelurahan,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _kelurahanController.text = newValue ?? '';
+                  });
+                },
+                items: kelurahanItems.map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(
+                      value,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  );
+                }).toList(),
+                hint: const Text("Kelurahan",
+                    style: TextStyle(fontWeight: FontWeight.bold)),
               ),
-              Form(
-                child: DropdownButtonFormField<String>(
-                  decoration: InputDecoration(
-                    enabledBorder: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(color: GlobalColors.stroke, width: 1),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(color: GlobalColors.mainColor, width: 2),
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16.0, vertical: 15.0),
+              DropdownButtonFormField<String>(
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'RT tidak boleh kosong';
+                  }
+                  return null; // Return null for successful validation
+                },
+                decoration: InputDecoration(
+                  enabledBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: GlobalColors.stroke, width: 1),
                   ),
-                  isDense: true,
-                  value: selectedRT,
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      _rtController.text = newValue ?? '';
-                    });
-                  },
-                  items: rtItems.map((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(
-                        value,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    );
-                  }).toList(),
-                  hint: const Text("RT",
-                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: GlobalColors.mainColor, width: 2),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16.0, vertical: 15.0),
                 ),
+                isDense: true,
+                value: selectedRT,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _rtController.text = newValue ?? '';
+                  });
+                },
+                items: rtItems.map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(
+                      value,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  );
+                }).toList(),
+                hint: const Text("RT",
+                    style: TextStyle(fontWeight: FontWeight.bold)),
               ),
-              Form(
-                child: DropdownButtonFormField<String>(
-                  decoration: InputDecoration(
-                    enabledBorder: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(color: GlobalColors.stroke, width: 1),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(color: GlobalColors.mainColor, width: 2),
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16.0, vertical: 15.0),
+              DropdownButtonFormField<String>(
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'RW tidak boleh kosong';
+                  }
+                  return null; // Return null for successful validation
+                },
+                decoration: InputDecoration(
+                  enabledBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: GlobalColors.stroke, width: 1),
                   ),
-                  isDense: true,
-                  value: selectedRW,
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      _rwController.text = newValue ?? '';
-                    });
-                  },
-                  items: rwItems.map((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(
-                        value,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    );
-                  }).toList(),
-                  hint: const Text("RW",
-                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: GlobalColors.mainColor, width: 2),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16.0, vertical: 15.0),
                 ),
+                isDense: true,
+                value: selectedRW,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _rwController.text = newValue ?? '';
+                  });
+                },
+                items: rwItems.map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(
+                      value,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  );
+                }).toList(),
+                hint: const Text("RW",
+                    style: TextStyle(fontWeight: FontWeight.bold)),
               ),
               Container(
                 padding:
@@ -243,9 +257,6 @@ class _CreateUserViewState extends State<CreateUserView> {
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'ID Pelanggan tidak boleh kosong';
-                  } else if (value.length != 12 ||
-                      int.tryParse(value) == null) {
-                    return 'ID Pelanggan harus terdiri dari 12 angka';
                   }
                   return null; // Return null for successful validation
                 },
@@ -264,7 +275,7 @@ class _CreateUserViewState extends State<CreateUserView> {
                   }
                   return null; // Return null for successful validation
                 },
-                controller: _noKKController,
+                controller: _nomorKartuKeluargaController,
                 text: "Nomor Kartu Keluarga",
                 textInputType: TextInputType.number,
                 obscure: false,
@@ -276,11 +287,20 @@ class _CreateUserViewState extends State<CreateUserView> {
                 obscure: false,
               ),
               const SizedBox(
-                height: 25,
+                height: 20,
               ),
+              if (errorText != null)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10.0, left: 16),
+                  child: Text(
+                    errorText!,
+                    style: const TextStyle(
+                      color: Colors.red,
+                    ),
+                  ),
+                ),
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: GlobalColors.mainColor,
@@ -290,14 +310,14 @@ class _CreateUserViewState extends State<CreateUserView> {
                     if (formKey.currentState!.validate()) {
                       Masyarakat masyarakat = Masyarakat(
                         nama: _namaController.text,
-                        noKK: _noKKController.text,
+                        nomorKartuKeluarga: _nomorKartuKeluargaController.text,
                         pekerjaan: _pekerjaanController.text,
                         alamat: _alamatController.text,
                         rt: _rtController.text,
                         rw: _rwController.text,
                         idPelanggan: _idPelangganController.text,
                         kelurahan: _kelurahanController.text,
-                        noHP: _noHPController.text,
+                        nomorTelepon: _nomorTeleponController.text,
                       );
                       insertData(masyarakat);
                     }
@@ -324,22 +344,23 @@ class _CreateUserViewState extends State<CreateUserView> {
     );
   }
 
-  void insertData(Masyarakat masyarakat) {
-    if (_namaController.text.isNotEmpty &&
-        _noKKController.text.isNotEmpty &&
-        _pekerjaanController.text.isNotEmpty &&
-        _alamatController.text.isNotEmpty &&
-        _rtController.text.isNotEmpty &&
-        _rwController.text.isNotEmpty &&
-        _idPelangganController.text.isNotEmpty &&
-        _kelurahanController.text.isNotEmpty) {
-      dbRef.push().set(
+  void insertData(Masyarakat masyarakat) async {
+    Query query = dbRef.child(_nomorKartuKeluargaController.text);
+    DatabaseEvent event = await query.once();
+    DataSnapshot snapshot = event.snapshot;
+    if (!snapshot.exists) {
+      dbRef.child(_nomorKartuKeluargaController.text).set(
             masyarakat.toJson(),
           );
+      if (!mounted) return;
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => const MainView()));
     } else {
-      print("Field must be not empty");
+      if (mounted) {
+        setState(() {
+          errorText = "Nomor kartu keluarga sudah ada";
+        });
+      }
     }
   }
 }

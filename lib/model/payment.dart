@@ -4,7 +4,7 @@ class Payment {
   late String harga;
   late String bulan;
   late List<String> namaBulan;
-  late String idMasyarakat;
+  late String nomorKartuKeluarga;
   late String nama;
   late String alamat;
   late String kelurahan;
@@ -19,7 +19,7 @@ class Payment {
     required this.harga,
     required this.bulan,
     required this.namaBulan,
-    required this.idMasyarakat,
+    required this.nomorKartuKeluarga,
     required this.nama,
     required this.alamat,
     required this.kelurahan,
@@ -36,7 +36,7 @@ class Payment {
       'harga': harga,
       'bulan': bulan,
       'namaBulan': namaBulan,
-      'idMasyarakat': idMasyarakat,
+      'nomorKartuKeluarga': nomorKartuKeluarga,
       'nama': nama,
       'alamat': alamat,
       'kelurahan': kelurahan,

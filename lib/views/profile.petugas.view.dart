@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:mobayari_app_dev/views/login.view.dart';
 import 'package:mobayari_app_dev/views/widgets/text.form.global.dart';
 
 import '../model/petugas.dart';
@@ -83,7 +82,7 @@ class _MyProfileViewState extends State<MyProfileView> {
 
       if (croppedFile != null) {
         setState(() {
-          isLoading = true; // Show loading indicator while uploading
+          isLoading = true;
         });
         String uniqueFileName =
             DateTime.now().millisecondsSinceEpoch.toString();
@@ -382,10 +381,10 @@ class _MyProfileViewState extends State<MyProfileView> {
   }
 
   void logout() async {
+    setState(() {
+      isLoading = true;
+    });
     await FirebaseAuth.instance.signOut();
-    if (!mounted) return;
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => const LoginView()));
   }
 
   void insertData(Petugas petugas, String uid) {
@@ -403,20 +402,4 @@ class _MyProfileViewState extends State<MyProfileView> {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => const MainView()));
   }
-
-  // void updateEmail(String newEmail) async {
-  //   try {
-  //     // Get the current user
-  //     User? user = FirebaseAuth.instance.currentUser;
-
-  //     if (user != null) {
-  //       // Update the email
-  //       await user.updateEmail(newEmail);
-
-  //       print('Email updated successfully: ${user.email}');
-  //     }
-  //   } catch (e) {
-  //     print('Error updating email: $e');
-  //   }
-  // }
 }

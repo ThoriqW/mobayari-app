@@ -30,8 +30,9 @@ class _HistoryPaymentState extends State<HistoryPayment> {
     setState(() {
       isLoading = true;
     });
-    String? idMasyarakat = widget.data.idPelanggan;
-    Query query = dbRef.orderByChild("idMasyarakat").equalTo(idMasyarakat);
+    String? nomorKartuKeluarga = widget.data.nomorKartuKeluarga;
+    Query query =
+        dbRef.orderByChild("nomorKartuKeluarga").equalTo(nomorKartuKeluarga);
     DatabaseEvent event = await query.once();
     DataSnapshot snapshot = event.snapshot;
     if (snapshot.value != null) {
@@ -45,7 +46,7 @@ class _HistoryPaymentState extends State<HistoryPayment> {
             harga: value['harga'],
             bulan: value['bulan'],
             namaBulan: namaBulan,
-            idMasyarakat: value['idMasyarakat'],
+            nomorKartuKeluarga: value['nomorKartuKeluarga'],
             nama: value['nama'],
             alamat: value['alamat'],
             kelurahan: value['kelurahan'],

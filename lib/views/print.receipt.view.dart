@@ -106,7 +106,7 @@ class _PrintReceiptViewState extends State<PrintReceiptView> {
                 ),
                 StreamBuilder<List<BluetoothDevice>>(
                   stream: bluetoothPrint.scanResults,
-                  initialData: [],
+                  initialData: const [],
                   builder: (c, snapshot) => Column(
                     children: snapshot.data!
                         .map((d) => ListTile(
@@ -166,7 +166,6 @@ class _PrintReceiptViewState extends State<PrintReceiptView> {
                                   setState(() {
                                     tips = 'Pilih Printer';
                                   });
-                                  print('Pilih Printer');
                                 }
                               },
                         child: const Text('Hubungkan'),
@@ -220,7 +219,7 @@ class _PrintReceiptViewState extends State<PrintReceiptView> {
                     ),
                     onPressed: _connected
                         ? () async {
-                            Map<String, dynamic> config = Map();
+                            Map<String, dynamic> config = {};
 
                             List<LineText> list = [];
 
@@ -329,7 +328,7 @@ class _PrintReceiptViewState extends State<PrintReceiptView> {
                                 type: LineText.TYPE_TEXT,
                                 content: widget.data.total,
                                 align: LineText.ALIGN_LEFT,
-                                x: 250,
+                                x: 240,
                                 relativeX: 0,
                                 linefeed: 0));
                             list.add(LineText(linefeed: 1));

@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobayari_app_dev/utils/global.colors.dart';
 import 'package:mobayari_app_dev/views/main.view.dart';
-import 'package:mobayari_app_dev/views/register.view.dart';
 import 'package:mobayari_app_dev/views/widgets/button.global.dart';
-import 'package:mobayari_app_dev/views/widgets/text.form.global.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -20,6 +18,7 @@ class _LoginViewState extends State<LoginView> {
   final formKey = GlobalKey<FormState>();
 
   String? errorText;
+  bool _passwordVisible = true;
 
   Future<User?> loginWithEmailPassword(
       {required String email, required String password}) async {
@@ -68,7 +67,10 @@ class _LoginViewState extends State<LoginView> {
                     key: formKey,
                     child: Column(
                       children: [
-                        TextFormGlobal(
+                        TextFormField(
+                          controller: _emailController,
+                          keyboardType: TextInputType.emailAddress,
+                          obscureText: false,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Email tidak boleh kosong';
@@ -79,17 +81,48 @@ class _LoginViewState extends State<LoginView> {
                             }
                             return null; // Return null for successful validation
                           },
-                          controller: _emailController,
-                          text: "Email",
-                          textInputType: TextInputType.emailAddress,
-                          obscure: false,
+                          decoration: InputDecoration(
+                            hintText: "Email",
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: GlobalColors.stroke, width: 1),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: GlobalColors.mainColor, width: 2),
+                            ),
+                          ),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 15),
-                        TextFormGlobal(
+                        TextFormField(
                           controller: _passwordController,
-                          text: "Password",
-                          textInputType: TextInputType.text,
-                          obscure: true,
+                          keyboardType: TextInputType.text,
+                          obscureText: _passwordVisible,
+                          decoration: InputDecoration(
+                            hintText: "Password",
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: GlobalColors.stroke, width: 1),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: GlobalColors.mainColor, width: 2),
+                            ),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                  _passwordVisible
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                  color: GlobalColors.stroke),
+                              onPressed: () {
+                                setState(() {
+                                  _passwordVisible = !_passwordVisible;
+                                });
+                              },
+                            ),
+                          ),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),
@@ -108,52 +141,22 @@ class _LoginViewState extends State<LoginView> {
                     height: 20,
                   ),
                   ButtonGlobal(
-                      text: "Login",
-                      onTap: () async {
-                        if (formKey.currentState!.validate()) {
-                          User? user = await loginWithEmailPassword(
-                              email: _emailController.text,
-                              password: _passwordController.text);
-                          if (!mounted) return;
-                          if (user != null) {
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const MainView()));
-                          }
+                    text: "Login",
+                    onTap: () async {
+                      if (formKey.currentState!.validate()) {
+                        User? user = await loginWithEmailPassword(
+                            email: _emailController.text,
+                            password: _passwordController.text);
+                        if (!mounted) return;
+                        if (user != null) {
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const MainView()));
                         }
-                      }),
-                  const SizedBox(
-                    height: 20,
+                      }
+                    },
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Belum punya akun?",
-                        style: TextStyle(
-                          color: GlobalColors.textColor,
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 3,
-                      ),
-                      InkWell(
-                        child: Text(
-                          "Daftar",
-                          style: TextStyle(color: GlobalColors.mainColor),
-                        ),
-                        onTap: () => {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const RegisterView(),
-                            ),
-                          )
-                        },
-                      )
-                    ],
-                  )
                 ],
               ),
             ),

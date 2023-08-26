@@ -23,6 +23,7 @@ class TextFormGlobal extends StatelessWidget {
       keyboardType: textInputType,
       obscureText: obscure,
       validator: validator,
+      textCapitalization: TextCapitalization.words,
       decoration: InputDecoration(
         hintText: text,
         contentPadding:

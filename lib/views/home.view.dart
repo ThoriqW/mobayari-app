@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:mobayari_app_dev/model/masyarakat.dart';
@@ -9,8 +10,7 @@ class HomeView extends StatefulWidget {
   const HomeView({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
-  _HomeViewState createState() => _HomeViewState();
+  State<HomeView> createState() => _HomeViewState();
 }
 
 class _HomeViewState extends State<HomeView> {
@@ -19,13 +19,23 @@ class _HomeViewState extends State<HomeView> {
   List<String> selectedCategories = [];
 
   bool isLoading = false;
-
-  final ref = FirebaseDatabase.instance.ref('Users');
+  String? uid;
 
   @override
   void initState() {
     super.initState();
+    getCurrentUser();
     readData();
+  }
+
+  User? getCurrentUser() {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      uid = user.uid;
+      return user;
+    } else {
+      return null;
+    }
   }
 
   void readData() async {
@@ -34,23 +44,35 @@ class _HomeViewState extends State<HomeView> {
     });
     final snapshot =
         await FirebaseDatabase.instance.ref().child("Masyarakat").get();
+    final snapshotPetugas =
+        await FirebaseDatabase.instance.ref().child("Petugas/$uid").get();
     if (snapshot.exists) {
       Map<dynamic, dynamic> dataMap = snapshot.value as Map<dynamic, dynamic>;
       dataMap.forEach((key, value) {
         Masyarakat data = Masyarakat(
-            id: key,
-            nama: value['nama'],
-            noKK: value['noKK'],
-            pekerjaan: value['pekerjaan'],
-            alamat: value['alamat'],
-            rt: value['rt'],
-            rw: value['rw'],
-            idPelanggan: value['idPelanggan'],
-            kelurahan: value['kelurahan'],
-            noHP: value['noHP'],
-            keterangan: value['keterangan']);
-        dataUser.add(data);
+          id: key,
+          nama: value['nama'],
+          nomorKartuKeluarga: value['nomorKartuKeluarga'],
+          pekerjaan: value['pekerjaan'],
+          alamat: value['alamat'],
+          rt: value['rt'],
+          rw: value['rw'],
+          idPelanggan: value['idPelanggan'],
+          kelurahan: value['kelurahan'],
+          nomorTelepon: value['nomorTelepon'],
+          keterangan: value['keterangan'],
+        );
+        if (snapshotPetugas.exists) {
+          Map<dynamic, dynamic> dataPetugas =
+              snapshotPetugas.value as Map<dynamic, dynamic>;
+          if (dataPetugas['role'] == value['rw']) {
+            dataUser.add(data);
+          } else if (dataPetugas['role'] == 'kelurahan') {
+            dataUser.add(data);
+          }
+        }
       });
+      dataUser.sort((a, b) => a.rt.compareTo(b.rt));
       if (mounted) {
         setState(() {
           userDisplay = dataUser;
@@ -81,7 +103,7 @@ class _HomeViewState extends State<HomeView> {
     } else {
       setState(() {
         userDisplay = dataUser
-            .where((user) => selectedCategories.contains(user.rw))
+            .where((user) => selectedCategories.contains(user.rt))
             .toList();
       });
     }
@@ -97,7 +119,7 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     final List<String> categories =
-        dataUser.map((user) => user.rw.toString()).toSet().toList();
+        dataUser.map((user) => user.rt.toString()).toSet().toList();
 
     return Scaffold(
       body: Container(
@@ -142,9 +164,6 @@ class _HomeViewState extends State<HomeView> {
                   hintText: "Cari",
                   prefixIcon: const Icon(Icons.search),
                   prefixIconColor: GlobalColors.mainColor),
-            ),
-            const SizedBox(
-              height: 15,
             ),
             Expanded(
               child: isLoading
@@ -191,7 +210,7 @@ class _HomeViewState extends State<HomeView> {
                                 ),
                               ),
                               subtitle: Text(
-                                userDisplay[index].rw,
+                                userDisplay[index].rt,
                                 style: const TextStyle(fontSize: 12.0),
                               ),
                             ),
